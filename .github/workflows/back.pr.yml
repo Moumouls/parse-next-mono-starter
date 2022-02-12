@@ -1,0 +1,29 @@
+name: Back
+
+on:
+  pull_request:
+    branches:
+      - master
+      - "rcs/back-*"
+    types: [opened, synchronize, reopened, unlabeled]
+    paths:
+      - "packages/back/**"
+
+jobs:
+  Test:
+    if: "!contains(github.event.pull_request.labels.*.name, 'skip-ci') && !contains(github.event.pull_request.labels.*.name, 'skip-ci/back')"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/init
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn workspace back test:ci-sync
+        env:
+          NODE_ENV: TEST

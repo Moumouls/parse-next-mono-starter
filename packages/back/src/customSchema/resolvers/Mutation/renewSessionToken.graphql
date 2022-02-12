@@ -1,0 +1,14 @@
+query getUserSession($userId: ID!) {
+	sessions(
+		first: 1
+		order: createdAt_DESC
+		where: { user: { have: { id: { equalTo: $userId } } } }
+	) {
+		edges {
+			node {
+				sessionToken
+				expiresAt
+			}
+		}
+	}
+}

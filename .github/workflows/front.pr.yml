@@ -1,0 +1,28 @@
+name: Front
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened, unlabeled]
+    paths:
+      - "packages/front/**"
+
+jobs:
+  Lint:
+    if: "!contains(github.event.pull_request.labels.*.name, 'skip-ci') && !contains(github.event.pull_request.labels.*.name, 'skip-ci/front')"
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/init
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn workspace front lint
+        env:
+          NODE_ENV: development

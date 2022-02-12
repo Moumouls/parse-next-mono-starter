@@ -1,0 +1,13 @@
+node_modules
+coverage
+.eslintcache
+lib
+.idea
+.yarn/*
+!.yarn/releases
+!.yarn/cache
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+**/.DS_Store
+**/.env

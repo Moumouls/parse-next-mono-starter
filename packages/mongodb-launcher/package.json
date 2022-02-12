@@ -1,0 +1,13 @@
+{
+  "name": "mongodb-launcher",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Antoine Cormouls",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mongodb-memory-server": "6.9.3"
+  }
+}

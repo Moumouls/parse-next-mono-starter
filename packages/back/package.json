@@ -1,0 +1,63 @@
+{
+	"name": "back",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.ts",
+	"scripts": {
+		"start": "node lib/index.js",
+		"build": "graphql-codegen && tsc --outDir lib -p .",
+		"lint": "prettier --loglevel error --write \"src/**\" && eslint \"src/**\"",
+		"test": "graphql-codegen && TEST=true jest --watch",
+		"test:ci:cloud": "graphql-codegen && yarn lint && TEST=true jest -w 2 --coverage --forceExit --bail",
+		"test:ci": "graphql-codegen &&  yarn lint && yarn build && TEST=true jest -w 6 --coverage --forceExit",
+		"mongodb": "yarn workspace mongodb-launcher start",
+		"dev:light": "graphql-codegen && concurrently -r \"yarn mongodb\" \"ts-node index.ts\"",
+		"dev": "graphql-codegen && concurrently -r \"yarn mongodb\" \"wait-on http://localhost:27272 && ts-node-dev --poll --transpile-only --ignore-watch node_modules index.ts\" \"nodemon\"",
+		"generate-schema": "wait-on http://localhost:1337/ready && get-graphql-schema -h X-Parse-Application-Id=dev -h X-Parse-Master-Key=dev http://localhost:1337/graphql > generated/schema.graphql && graphql-codegen",
+		"scan": "sonar-scanner",
+		"deploy-sonarqube": "docker run -d --name sonarqube -p 9000:9000 sonarqube",
+		"sonarqube": "docker start sonarqube",
+		"pre-commit": "lint-staged",
+		"reinstall": "rm -rf node_modules"
+	},
+	"lint-staged": {
+		"*.(ts|tsx|graphql|js|json)": "prettier --write \"src/**\""
+	},
+	"author": "Antoine Cormouls",
+	"license": "MIT",
+	"dependencies": {
+		"@parse/s3-files-adapter": "1.6.2",
+		"aws-sdk": "2.624.0",
+		"express": "4.17.1",
+		"graphql": "15.4.0",
+		"graphql-relay": "0.7.0",
+		"graphql-request": "3.4.0",
+		"mongodb": "3.6.4",
+		"nexus": "1.0.0",
+		"nodemon": "2.0.7",
+		"parse": "2.13.0",
+		"parse-dashboard": "2.1.0",
+		"parse-server": "5.0.0-alpha.24",
+		"validator": "13.1.17"
+	},
+	"devDependencies": {
+		"@graphql-codegen/cli": "1.20.1",
+		"@types/express": "4.17.2",
+		"@types/graphql-relay": "0.6.0",
+		"@types/parse": "2.12.1",
+		"@types/validator": "13.1.0",
+		"concurrently": "5.3.0",
+		"eslint": "7.32.0",
+		"get-graphql-schema": "2.1.2",
+		"jest": "27.4.7",
+		"lint-staged": "10.5.4",
+		"mongodb-launcher": "1.0.0",
+		"prettier": "2.2.1",
+		"sonarqube-scanner": "2.8.0",
+		"ts-node": "10.0.0",
+		"ts-node-dev": "1.1.1",
+		"typescript": "4.3.2",
+		"uuid": "8.3.2",
+		"wait-on": "5.2.1"
+	}
+}

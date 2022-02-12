@@ -1,0 +1,19 @@
+name: Back Hotfix
+
+on:
+  push:
+    branches:
+      - "rcs/*"
+    paths:
+      - "packages/back/**"
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/hotfix
+        with:
+          project: dashboard-back
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

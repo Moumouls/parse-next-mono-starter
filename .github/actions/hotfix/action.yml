@@ -1,0 +1,46 @@
+name: "Hotfix"
+description: "Create a new hotfix release"
+inputs:
+  project:
+    description: "Project name"
+    required: true
+  GITHUB_TOKEN:
+    description: "Github token"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Use Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Get closer tag
+      id: closerTag
+      shell: bash
+      run: |
+        echo ::set-output name=name::$(git describe --tags --abbrev=0 --match '${{ inputs.project }}*')
+
+    - name: Match tag
+      uses: actions-ecosystem/action-regex-match@v2
+      id: regex-match
+      with:
+        text: ${{ steps.closerTag.outputs.name }}
+        regex: "(?<package>.*)-(?<version>v.*-rc\\.[0-9]+)(-h)?(?<hotfix>.*)?"
+
+    - name: Get hotfix num
+      if: ${{ steps.regex-match.outputs.group4 }}
+      id: hotfixNum
+      shell: bash
+      run: |
+        echo ::set-output name=value::$((${{ steps.regex-match.outputs.group4 }}+1))
+
+    - name: Create Pre Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ steps.regex-match.outputs.group1 }}-${{ steps.regex-match.outputs.group2 }}-h${{ steps.hotfixNum.outputs.value || 1 }}
+        release_name: ${{ steps.regex-match.outputs.group1 }}-${{ steps.regex-match.outputs.group2 }}-h${{ steps.hotfixNum.outputs.value || 1 }}
+        body: Hotfix
+        prerelease: true

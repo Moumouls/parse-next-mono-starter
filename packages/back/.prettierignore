@@ -1,0 +1,7 @@
+coverage
+logs
+**/.DS_Store
+**/nexusTypes.d.ts
+generated
+*.yml
+*.md

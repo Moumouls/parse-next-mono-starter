@@ -1,0 +1,43 @@
+name: Staging
+
+on:
+  release:
+    types:
+      - prereleased
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    if: contains(github.ref,'-back-') || contains(github.ref,'-front-')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+        with:
+          tagRegex: "(?<package>.*)-(?<version>v.*-rc\\.[0-9]+)(?<hotfix>-h.*)?"
+
+      - name: Login to Gitlab
+        uses: docker/login-action@v1
+        with:
+          registry: registry.gitlab.com
+          username: ${{ secrets.GITLAB_USERNAME }}
+          password: ${{ secrets.GITLAB_PASSWORD }}
+
+      - name: Build and push
+        if: ${{ !steps.tagName.outputs.hotfix }}
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: packages/${{ steps.tagName.outputs.package }}/Dockerfile
+          tags: registry.gitlab.com/${{ secrets.GITLAB_USERNAME }}/${{ steps.tagName.outputs.package }}:${{ steps.tagName.outputs.version }}
+
+      - name: Build and push hotfix
+        if: ${{ steps.tagName.outputs.hotfix }}
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: packages/${{ steps.tagName.outputs.package }}/Dockerfile
+          tags: registry.gitlab.com/${{ secrets.GITLAB_USERNAME }}/${{ steps.tagName.outputs.package }}:${{ steps.tagName.outputs.version }}${{ steps.tagName.outputs.hotfix }}
+# Deploy to staging script cloud provider to insert here

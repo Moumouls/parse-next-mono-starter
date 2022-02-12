@@ -1,0 +1,21 @@
+name: Hotfix to master
+
+on:
+  pull_request:
+    branches:
+      - "rcs/*"
+    types: [closed]
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v2
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: ${{ github.head_ref }}
+          destination_branch: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "hotfix: ${{ github.head_ref }} into master"
+          pr_body: "Auto PR after the merge of ${{ github.head_ref }} into ${{ github.ref }}"

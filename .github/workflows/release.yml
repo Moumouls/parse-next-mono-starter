@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - "rc"
+
+jobs:
+  Release:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/init
+        with:
+          node-version: ${{ matrix.node-version }}
+          disable_bs: "true"
+      - run: yarn release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}

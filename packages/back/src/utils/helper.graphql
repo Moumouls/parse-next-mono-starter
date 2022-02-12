@@ -1,0 +1,15 @@
+mutation createSession($userId: ID!, $expiresAt: Date!, $token: String!) {
+	createSession(
+		input: {
+			fields: {
+				user: { link: $userId }
+				sessionToken: $token
+				expiresAt: $expiresAt
+			}
+		}
+	) {
+		session {
+			sessionToken
+		}
+	}
+}

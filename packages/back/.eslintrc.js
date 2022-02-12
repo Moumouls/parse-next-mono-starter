@@ -1,0 +1,38 @@
+module.exports = {
+	env: {
+		es6: true,
+		node: true,
+		jest: true,
+	},
+	extends: ['airbnb-typescript/base'],
+	globals: {
+		Atomics: 'readonly',
+		SharedArrayBuffer: 'readonly',
+	},
+	parser: '@typescript-eslint/parser',
+	parserOptions: {
+		tsconfigRootDir: __dirname,
+		project: ['./tsconfig.json'],
+	},
+	plugins: ['@typescript-eslint'],
+	rules: {
+		'object-curly-newline': 0,
+		semi: 0,
+		'@typescript-eslint/semi': 0,
+		'@typescript-eslint/no-use-before-define': 0,
+		indent: [0, 4],
+		'no-tabs': 0,
+		'@typescript-eslint/indent': [0, 4],
+		'no-use-before-define': 0,
+		'no-mixed-spaces-and-tabs': 0,
+		'import/prefer-default-export': 0,
+		'implicit-arrow-linebreak': 0,
+		'function-paren-newline': 0,
+		'import/no-unresolved': [2, { commonjs: true }],
+		curly: 0,
+		'operator-linebreak': 0,
+		'nonblock-statement-body-position': 0,
+		'no-confusing-arrow': 0,
+		'import/extensions': 0,
+	},
+}

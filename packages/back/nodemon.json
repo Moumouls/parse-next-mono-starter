@@ -1,0 +1,9 @@
+{
+	"watch": [
+		"./src/customSchema/**/*.ts",
+		"./src/schema/**/*.ts",
+		"./src/**/*.graphql"
+	],
+	"ext": "ts,graphql",
+	"exec": "yarn generate-schema"
+}

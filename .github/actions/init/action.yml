@@ -1,0 +1,40 @@
+name: "Init"
+description: "Basic init stuff for the monorepo"
+inputs:
+  node-version:
+    description: "Node version"
+    required: true
+  disable_bs:
+    description: "Disable bootstrap"
+    required: false
+    default: "false"
+runs:
+  using: "composite"
+  steps:
+    - name: Use Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Cache node_modules
+      id: cache-node-modules
+      uses: actions/cache@v2
+      with:
+        path: |
+          node_modules
+          **/node_modules
+          */*/node_modules
+        key: ${{ runner.os }}${{ contains(github.base_ref, 'rcs/') && 'rcs' || '' }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}${{ contains(github.base_ref, 'rcs/') && 'rcs' || '' }}-yarn-
+    - name: Yarn
+      if: steps.cache-node-modules.outputs.cache-hit != 'true'
+      run: yarn
+      shell: bash
+      env:
+        NODE_ENV: development
+    - name: Bootstrap
+      if: inputs.disable_bs == 'false'
+      run: yarn bs
+      shell: bash
+      env:
+        NODE_ENV: development

@@ -1,0 +1,18 @@
+name: Prod
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    if: contains(github.ref,'-back-') || contains(github.ref,'-front-')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+        with:
+          tagRegex: "(?<package>.*)-(?<version>v.*-rc\\..*)"
+# deploy to prod cloud provider code

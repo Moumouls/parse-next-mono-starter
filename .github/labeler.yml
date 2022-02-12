@@ -1,0 +1,12 @@
+back:
+  - packages/back/**/*
+front:
+  - packages/front/**/*
+mongodb-launcher:
+  - packages/mongodb-launcher/**/*
+github:
+  - .github/**/*
+config:
+  - lerna.json
+  - package.json
+  - .yarnrc.yml

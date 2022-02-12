@@ -1,0 +1,7 @@
+coverage
+node_modules
+logs
+generated
+**/.DS_Store
+**/nexusTypes.d.ts
+**/*.graphql

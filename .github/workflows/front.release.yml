@@ -1,0 +1,33 @@
+name: Front
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, unlabeled]
+    branches:
+      - rc
+      - "rcs/front-*"
+    paths:
+      - "packages/front/**"
+
+jobs:
+  Test:
+    if: "!contains(github.event.pull_request.labels.*.name, 'skip-ci') && !contains(github.event.pull_request.labels.*.name, 'skip-ci/front')"
+    timeout-minutes: 50
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/init
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+      - run: yarn workspace dashboard-front cypress:install
+        env:
+          NODE_ENV: development
+      - run: yarn workspace front test:ci
+        env:
+          NODE_ENV: development
