@@ -1,4 +1,4 @@
-# Parse/Next Monorepo Starter
+# Parse/Next Monorepo Starter (Work in progress)
 
 ### All in one template monorepo to build and deploy apps faster than ever with modern technologies.
 
