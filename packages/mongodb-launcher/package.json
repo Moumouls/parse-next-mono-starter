@@ -8,6 +8,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "mongodb-memory-server": "6.9.3"
+    "mongodb-memory-server": "8.4.2"
   }
 }

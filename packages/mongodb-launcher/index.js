@@ -1,4 +1,5 @@
-process.env.MONGOMS_VERSION = "4.4.2";
+process.env.MONGOMS_VERSION = "5.3.1";
+process.env.MONGOMS_ARCH = "x64";
 const http = require("http");
 const { MongoMemoryReplSet } = require("mongodb-memory-server");
 
@@ -6,7 +7,7 @@ const hostname = "127.0.0.1";
 const port = 27272;
 
 const run = async () => {
-  const replSet = new MongoMemoryReplSet({
+  const replSet = await MongoMemoryReplSet.create({
     instanceOpts: [
       {
         port: 27017, // port number for the instance
